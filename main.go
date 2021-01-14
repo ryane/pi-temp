@@ -29,11 +29,17 @@ func main() {
 	ctx := Context()
 	flag.Parse()
 
+	nodeName, err := os.Hostname()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	s := Server(*addr)
 	temperature := prometheus.NewGauge(prometheus.GaugeOpts{
-		Namespace: "pitemp",
-		Name:      "temperature_celsius",
-		Help:      "The CPU temperature of this Raspberry Pi in degrees Celsius.",
+		Namespace:   "pitemp",
+		Name:        "temperature_celsius",
+		Help:        "The CPU temperature of this Raspberry Pi in degrees Celsius.",
+		ConstLabels: prometheus.Labels{"node": nodeName},
 	})
 	prometheus.MustRegister(temperature)
 
