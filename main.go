@@ -29,9 +29,18 @@ func main() {
 	ctx := Context()
 	flag.Parse()
 
-	nodeName, err := os.Hostname()
-	if err != nil {
-		log.Fatal(err)
+	var (
+		nodeName string
+		err      error
+	)
+
+	nodeName = os.Getenv("NODE_NAME")
+
+	if nodeName == "" {
+		nodeName, err = os.Hostname()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	s := Server(*addr)
